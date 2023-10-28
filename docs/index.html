@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.361">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Materi (R) Data Analitik - Topik 1 Data Import</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Materi (R) Data Analitik</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Topik Pembahasan</a></li><li class="breadcrumb-item"><a href="./index.html">Topik 1 Data Import</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Topik Pembahasan</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Topik 1 Data Import</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+ <span class="menu-text">topik2.qmd</span>
+  </li>
+          <li class="sidebar-item">
+ <span class="menu-text">topik3.qmd</span>
+  </li>
+          <li class="sidebar-item">
+ <span class="menu-text">topik4.qmd</span>
+  </li>
+          <li class="sidebar-item">
+ <span class="menu-text">topik5.qmd</span>
+  </li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#import-data-spreadsheet-excel" id="toc-import-data-spreadsheet-excel" class="nav-link active" data-scroll-target="#import-data-spreadsheet-excel">1. Import Data Spreadsheet Excel</a>
+  <ul class="collapse">
+  <li><a href="#library-spreadsheet-excel" id="toc-library-spreadsheet-excel" class="nav-link" data-scroll-target="#library-spreadsheet-excel">1.1 Library Spreadsheet Excel</a></li>
+  <li><a href="#membaca-spreadsheet-excel" id="toc-membaca-spreadsheet-excel" class="nav-link" data-scroll-target="#membaca-spreadsheet-excel">1.2 Membaca spreadsheet Excel</a></li>
+  <li><a href="#membaca-worksheet-excel" id="toc-membaca-worksheet-excel" class="nav-link" data-scroll-target="#membaca-worksheet-excel">1.3 Membaca worksheet Excel</a></li>
+  <li><a href="#write-ke-excel" id="toc-write-ke-excel" class="nav-link" data-scroll-target="#write-ke-excel">1.4 Write ke Excel</a></li>
+  </ul></li>
+  <li><a href="#import-database" id="toc-import-database" class="nav-link" data-scroll-target="#import-database">2. Import Database</a>
+  <ul class="collapse">
+  <li><a href="#tampilkan-semua-tabel" id="toc-tampilkan-semua-tabel" class="nav-link" data-scroll-target="#tampilkan-semua-tabel">2.1 Tampilkan Semua Tabel</a></li>
+  <li><a href="#tampilkan-tabel-khusus" id="toc-tampilkan-tabel-khusus" class="nav-link" data-scroll-target="#tampilkan-tabel-khusus">2.2 Tampilkan tabel khusus</a></li>
+  <li><a href="#read-data-dengan-select-dan-where" id="toc-read-data-dengan-select-dan-where" class="nav-link" data-scroll-target="#read-data-dengan-select-dan-where">2.3 Read data dengan SELECT dan WHERE</a></li>
+  <li><a href="#fungsi-inner-join" id="toc-fungsi-inner-join" class="nav-link" data-scroll-target="#fungsi-inner-join">2.4 Fungsi INNER JOIN</a></li>
+  </ul></li>
+  <li><a href="#import-data-online" id="toc-import-data-online" class="nav-link" data-scroll-target="#import-data-online">3. Import Data Online</a></li>
+  <li><a href="#import-google-sheets" id="toc-import-google-sheets" class="nav-link" data-scroll-target="#import-google-sheets">4. Import Google Sheets</a>
+  <ul class="collapse">
+  <li><a href="#menampilkan-sheet-khusus-google-sheet" id="toc-menampilkan-sheet-khusus-google-sheet" class="nav-link" data-scroll-target="#menampilkan-sheet-khusus-google-sheet">4.1 Menampilkan sheet khusus google sheet</a></li>
+  </ul></li>
+  <li><a href="#web-scrapping" id="toc-web-scrapping" class="nav-link" data-scroll-target="#web-scrapping">5. Web Scrapping</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Topik 1 Data Import</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Sebelum melakukan data import kita perlu mengunduh file datasets pada link berikut atau klik ikon Github dan unduh file data yang diperlukan</p>
+<section id="import-data-spreadsheet-excel" class="level2">
+<h2 class="anchored" data-anchor-id="import-data-spreadsheet-excel">1. Import Data Spreadsheet Excel</h2>
+<section id="library-spreadsheet-excel" class="level3">
+<h3 class="anchored" data-anchor-id="library-spreadsheet-excel">1.1 Library Spreadsheet Excel</h3>
+<p>Di bagian ini, kita akan mempelajari cara memuat data dari spreadsheet Excel di R dengan package <code>readxl</code>. Package ini adalah tidyverse non-core, jadi kita perlu memuatnya secara eksplisit, tetapi diinstal secara otomatis ketika menginstal paket tidyverse. Kemudian, kita juga akan menggunakan package <code>writexl</code>, yang memungkinkan kita untuk membuat spreadsheet Excel.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(writexl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="membaca-spreadsheet-excel" class="level3">
+<h3 class="anchored" data-anchor-id="membaca-spreadsheet-excel">1.2 Membaca spreadsheet Excel</h3>
+<p>Semua fungsi ini memiliki sintaks yang sama seperti fungsi untuk membaca jenis file lain, misalnya, <code>read_csv()</code> , <code>read_table()</code> dll. kali ini kita akan menggunakan <code>read_excel()</code> . kita akan mengimport data Excel students yang telah diunduh tadi dengan menggunakan fungsi :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; membaca file student.xlsx dari lokasi folder data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>students <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/students.xlsx"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>students</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  `Student ID` `Full Name`      favourite.food     mealPlan            AGE  
+         &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;              &lt;chr&gt;               &lt;chr&gt;
+1            1 Sunil Huffmann   Strawberry yoghurt Lunch only          4    
+2            2 Barclay Lynn     French fries       Lunch only          5    
+3            3 Jayendra Lyne    N/A                Breakfast and lunch 7    
+4            4 Leon Rossini     Anchovies          Lunch only          &lt;NA&gt; 
+5            5 Chidiegwu Dunkel Pizza              Breakfast and lunch five 
+6            6 Güvenç Attila    Ice cream          Lunch only          6    </code></pre>
+</div>
+</div>
+<p>Nama kolom tidak teratur,lalu kita ubah dengan fungsi <code>col_names</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; mengubah nama kolom</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">read_excel</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"data/students.xlsx"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">"student_id"</span>, <span class="st">"full_name"</span>, <span class="st">"favourite_food"</span>, <span class="st">"meal_plan"</span>, <span class="st">"age"</span>),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">skip =</span> <span class="dv">1</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  student_id full_name        favourite_food     meal_plan           age  
+       &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;              &lt;chr&gt;               &lt;chr&gt;
+1          1 Sunil Huffmann   Strawberry yoghurt Lunch only          4    
+2          2 Barclay Lynn     French fries       Lunch only          5    
+3          3 Jayendra Lyne    N/A                Breakfast and lunch 7    
+4          4 Leon Rossini     Anchovies          Lunch only          &lt;NA&gt; 
+5          5 Chidiegwu Dunkel Pizza              Breakfast and lunch five 
+6          6 Güvenç Attila    Ice cream          Lunch only          6    </code></pre>
+</div>
+</div>
+<section id="tipe-data" class="level4">
+<h4 class="anchored" data-anchor-id="tipe-data">1.2.1 Tipe Data</h4>
+<p>Dalam file Excel, semua nilai memiliki tipe yang berbeda tidak semuanya adalah string. Data yang mendasari dalam spreadsheet Excel lebih kompleks, seperti :</p>
+<ul>
+<li><p>Boolean, seperti TRUE , , FALSE atau NA.</p></li>
+<li><p>Number, seperti “10” atau “10,5”.</p></li>
+<li><p>Date, yang juga dapat mencakup waktu seperti “11/1/21” atau “11/1/21 3:00 PM”.</p></li>
+<li><p>String teks, seperti “sepuluh”.</p></li>
+</ul>
+<p>terlihat pada kolom age dengan tipe data yang seharusnya numeric terdapat data string/huruf <strong>(five)</strong> sehingga kita ubah menjadi numeric <strong>(5)</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>students <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"data/students.xlsx"</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">"student_id"</span>, <span class="st">"full_name"</span>, <span class="st">"favourite_food"</span>, <span class="st">"meal_plan"</span>, <span class="st">"age"</span>),</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">skip =</span> <span class="dv">1</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">na =</span> <span class="fu">c</span>(<span class="st">""</span>, <span class="st">"N/A"</span>),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_types =</span> <span class="fu">c</span>(<span class="st">"numeric"</span>, <span class="st">"text"</span>, <span class="st">"text"</span>, <span class="st">"text"</span>, <span class="st">"text"</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Fungsi col_types mengubah type data</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>students <span class="ot">&lt;-</span> students <span class="sc">|&gt;</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">age =</span> <span class="fu">if_else</span>(age <span class="sc">==</span> <span class="st">"five"</span>, <span class="st">"5"</span>, age),</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">age =</span> <span class="fu">parse_number</span>(age)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Fungsi mutate mengubah data dengan argumen if </span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>students</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  student_id full_name        favourite_food     meal_plan             age
+       &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;              &lt;chr&gt;               &lt;dbl&gt;
+1          1 Sunil Huffmann   Strawberry yoghurt Lunch only              4
+2          2 Barclay Lynn     French fries       Lunch only              5
+3          3 Jayendra Lyne    &lt;NA&gt;               Breakfast and lunch     7
+4          4 Leon Rossini     Anchovies          Lunch only             NA
+5          5 Chidiegwu Dunkel Pizza              Breakfast and lunch     5
+6          6 Güvenç Attila    Ice cream          Lunch only              6</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="membaca-worksheet-excel" class="level3">
+<h3 class="anchored" data-anchor-id="membaca-worksheet-excel">1.3 Membaca worksheet Excel</h3>
+<p>Kita bisa memilih akan menampilkan sheet yang diperlukan dari worksheet Excel</p>
+<p>Pada data Excel penguins terdapat worksheet dan kita akan menampilkan sheet <code>Torgerseen Island</code></p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://r4ds.hadley.nz/screenshots/import-spreadsheets-penguins-islands.png" class="img-fluid figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Identifikasi nama sheet</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>penguins_torgersen <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/penguins.xlsx"</span>, <span class="at">sheet =</span> <span class="st">"Torgersen Island"</span>, <span class="at">na =</span> <span class="st">"NA"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Tampilkan data sheet</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>penguins_torgersen</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 52 × 8
+   species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+   &lt;chr&gt;   &lt;chr&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;dbl&gt;       &lt;dbl&gt;
+ 1 Adelie  Torgersen           39.1          18.7               181        3750
+ 2 Adelie  Torgersen           39.5          17.4               186        3800
+ 3 Adelie  Torgersen           40.3          18                 195        3250
+ 4 Adelie  Torgersen           NA            NA                  NA          NA
+ 5 Adelie  Torgersen           36.7          19.3               193        3450
+ 6 Adelie  Torgersen           39.3          20.6               190        3650
+ 7 Adelie  Torgersen           38.9          17.8               181        3625
+ 8 Adelie  Torgersen           39.2          19.6               195        4675
+ 9 Adelie  Torgersen           34.1          18.1               193        3475
+10 Adelie  Torgersen           42            20.2               190        4250
+# ℹ 42 more rows
+# ℹ 2 more variables: sex &lt;chr&gt;, year &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="write-ke-excel" class="level3">
+<h3 class="anchored" data-anchor-id="write-ke-excel">1.4 Write ke Excel</h3>
+<p>Kita dapat menginput data dan mengubahnya ke Excel menggunakan fungsi <code>write_xlsx()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Buat data dan input </span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>bake_sale <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">item     =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">"brownie"</span>, <span class="st">"cupcake"</span>, <span class="st">"cookie"</span>)),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">quantity =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">5</span>, <span class="dv">8</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Tampilkan tabel</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>bake_sale</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  item    quantity
+  &lt;fct&gt;      &lt;dbl&gt;
+1 brownie       10
+2 cupcake        5
+3 cookie         8</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Selanjutnya kita create ke file Excel dan simpan di path lokasi folder</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_xlsx</span>(bake_sale, <span class="at">path =</span> <span class="st">"data/bake-sale.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Tampilkan data Excel yang telah dibuat</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">read_excel</span>(<span class="st">"data/bake-sale.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  item    quantity
+  &lt;chr&gt;      &lt;dbl&gt;
+1 brownie       10
+2 cupcake        5
+3 cookie         8</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="import-database" class="level2">
+<h2 class="anchored" data-anchor-id="import-database">2. Import Database</h2>
+<p>Dalam bab ini, kita akan mempelajari package <code>DBI</code> untuk menyambungkan ke database dan kemudian mengambil data dengan query SQL. SQL (Structured Query Language), adalah bahasa pemrograman untuk database dan merupakan bahasa terpenting bagi semua jenis data analitik.</p>
+<p>Pada contoh ini kita akan meng-import database SQL berisi data postingan dan pesan user Tweats. Pertama kita perlu me-load package <code>DBI</code> dan <code>RMySQL</code>, kemudian menghubungkan koneksi database tweater.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DBI)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RMySQL)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Koneksi database</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>con <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(RMySQL<span class="sc">::</span><span class="fu">MySQL</span>(), </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">dbname =</span> <span class="st">"tweater"</span>, </span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">host =</span> <span class="st">"courses.csrrinzqubik.us-east-1.rds.amazonaws.com"</span>, </span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">port =</span> <span class="dv">3306</span>,</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">user =</span> <span class="st">"student"</span>,</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">password =</span> <span class="st">"datacamp"</span>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="fu">dbListTables</span>(con)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "comments" "tweats"   "users"   </code></pre>
+</div>
+</div>
+<section id="tampilkan-semua-tabel" class="level3">
+<h3 class="anchored" data-anchor-id="tampilkan-semua-tabel">2.1 Tampilkan Semua Tabel</h3>
+<p>Terlihat ada 3 tabel yaitu <strong>“comments”, “tweats”,</strong> dan <strong>“users”</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>tables <span class="ot">&lt;-</span> <span class="fu">dbListTables</span>(con)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>table_names <span class="ot">&lt;-</span> <span class="fu">dbListTables</span>(con)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Import semua tabel</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>tables <span class="ot">&lt;-</span> <span class="fu">lapply</span>(table_names, dbReadTable, <span class="at">conn =</span> con)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Tampilkan semua Tabel</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>tables</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+     id tweat_id user_id            message
+1  1022       87       7              nice!
+2  1000       77       7             great!
+3  1011       49       5            love it
+4  1012       87       1   awesome! thanks!
+5  1010       88       6              yuck!
+6  1026       77       4      not my thing!
+7  1004       49       1  this is fabulous!
+8  1030       75       6           so easy!
+9  1025       88       2             oh yes
+10 1007       49       3           serious?
+11 1020       77       1 couldn't be better
+12 1014       77       1       saved my day
+
+[[2]]
+  id user_id
+1 75       3
+2 88       4
+3 77       6
+4 87       5
+5 49       1
+6 24       7
+                                                                 post
+1                                       break egg. bake egg. eat egg.
+2                           wash strawberries. add ice. blend. enjoy.
+3                       2 slices of bread. add cheese. grill. heaven.
+4               open and crush avocado. add shrimps. perfect starter.
+5 nachos. add tomato sauce, minced meat and cheese. oven for 10 mins.
+6                              just eat an apple. simply and healthy.
+        date
+1 2015-09-05
+2 2015-09-14
+3 2015-09-21
+4 2015-09-22
+5 2015-09-22
+6 2015-09-24
+
+[[3]]
+  id      name     login
+1  1 elisabeth  elismith
+2  2      mike     mikey
+3  3      thea   teatime
+4  4    thomas tomatotom
+5  5    oliver olivander
+6  6      kate  katebenn
+7  7    anjali    lianja</code></pre>
+</div>
+</div>
+</section>
+<section id="tampilkan-tabel-khusus" class="level3">
+<h3 class="anchored" data-anchor-id="tampilkan-tabel-khusus">2.2 Tampilkan tabel khusus</h3>
+<p>Misal kita hanya akan menampilkan tabel users</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; import tabel users dari data tweater</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>users <span class="ot">&lt;-</span> <span class="fu">dbReadTable</span>(con, <span class="st">"users"</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Tampilkan tabel</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>users</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  id      name     login
+1  1 elisabeth  elismith
+2  2      mike     mikey
+3  3      thea   teatime
+4  4    thomas tomatotom
+5  5    oliver olivander
+6  6      kate  katebenn
+7  7    anjali    lianja</code></pre>
+</div>
+</div>
+</section>
+<section id="read-data-dengan-select-dan-where" class="level3">
+<h3 class="anchored" data-anchor-id="read-data-dengan-select-dan-where">2.3 Read data dengan SELECT dan WHERE</h3>
+<p>Kita akan menampilkan data post terbaru dari tabel tweats pada tanggal lebih dari ‘2015-09-21’</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; menampilkan data post dari tabel tweats pada tanggal lebih dari '2015-09-21'</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>latest <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(con, <span class="st">"SELECT post FROM tweats</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="st">WHERE date &gt; '2015-09-21'"</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Tampilkan data</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>latest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                                                 post
+1               open and crush avocado. add shrimps. perfect starter.
+2 nachos. add tomato sauce, minced meat and cheese. oven for 10 mins.
+3                              just eat an apple. simply and healthy.</code></pre>
+</div>
+</div>
+</section>
+<section id="fungsi-inner-join" class="level3">
+<h3 class="anchored" data-anchor-id="fungsi-inner-join">2.4 Fungsi INNER JOIN</h3>
+<p>Misal kita akan menampilkan gabungan data dari 2 tabel berbeda berdasarkan foreign key/id</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Tampilkan nama dari tabel users dan post dari tabel tweats berdasarkan user id dimana tanggal post lebih dari '2015-09-19'</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dbGetQuery</span>(con, <span class="st">"SELECT name, post</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="st">  FROM users INNER JOIN tweats on users.id = user_id</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="st">    WHERE date &gt; '2015-09-19'"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       name                                                                post
+1 elisabeth nachos. add tomato sauce, minced meat and cheese. oven for 10 mins.
+2    oliver               open and crush avocado. add shrimps. perfect starter.
+3      kate                       2 slices of bread. add cheese. grill. heaven.
+4    anjali                              just eat an apple. simply and healthy.</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="import-data-online" class="level2">
+<h2 class="anchored" data-anchor-id="import-data-online">3. Import Data Online</h2>
+<p>Metode ketiga yaitu import data dari url dengan fungsi read. Pertama kita perlu me-load package tidyverse kemudian gunakan fungsi <code>read_csv()</code> atau <code>read_excel()</code> sesuai format data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Load package</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Identifikasi url data</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>students <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://pos.it/r4ds-students-csv"</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Tampilkan data</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>students</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  `Student ID` `Full Name`      favourite.food     mealPlan            AGE  
+         &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;              &lt;chr&gt;               &lt;chr&gt;
+1            1 Sunil Huffmann   Strawberry yoghurt Lunch only          4    
+2            2 Barclay Lynn     French fries       Lunch only          5    
+3            3 Jayendra Lyne    N/A                Breakfast and lunch 7    
+4            4 Leon Rossini     Anchovies          Lunch only          &lt;NA&gt; 
+5            5 Chidiegwu Dunkel Pizza              Breakfast and lunch five 
+6            6 Güvenç Attila    Ice cream          Lunch only          6    </code></pre>
+</div>
+</div>
+</section>
+<section id="import-google-sheets" class="level2">
+<h2 class="anchored" data-anchor-id="import-google-sheets">4. Import Google Sheets</h2>
+<p>Panggunaan package googlesheet hampir mirip dengan import online hanya saja diganti dengan <em>sheet_id</em>. Pertama kita me-load package <code>googlesheets4</code> dan <code>tidyverse</code> kemudian gunakan fungsi read_sheet. Misal kita akan mengimport data dari google sheet : <a href="https://docs.google.com/spreadsheets/d/1V1nPp1tzOuutXFLb3G9Eyxi3qxeEhnOXUzL5_BcCQ0w" class="uri">https://docs.google.com/spreadsheets/d/1V1nPp1tzOuutXFLb3G9Eyxi3qxeEhnOXUzL5_BcCQ0w</a> maka kita akan mengambil id sheet sebagai <strong>key call</strong> nya yaitu <code>1V1nPp1tzOuutXFLb3G9Eyxi3qxeEhnOXUzL5_BcCQ0w</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(googlesheets4)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>googlesheets4<span class="sc">::</span><span class="fu">gs4_deauth</span>()</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">read_sheet</span>(<span class="st">"1V1nPp1tzOuutXFLb3G9Eyxi3qxeEhnOXUzL5_BcCQ0w"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  `Student ID` `Full Name`      favourite.food     mealPlan            AGE      
+         &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;              &lt;chr&gt;               &lt;list&gt;   
+1            1 Sunil Huffmann   Strawberry yoghurt Lunch only          &lt;dbl [1]&gt;
+2            2 Barclay Lynn     French fries       Lunch only          &lt;dbl [1]&gt;
+3            3 Jayendra Lyne    N/A                Breakfast and lunch &lt;dbl [1]&gt;
+4            4 Leon Rossini     Anchovies          Lunch only          &lt;NULL&gt;   
+5            5 Chidiegwu Dunkel Pizza              Breakfast and lunch &lt;chr [1]&gt;
+6            6 Güvenç Attila    Ice cream          Lunch only          &lt;dbl [1]&gt;</code></pre>
+</div>
+</div>
+<section id="menampilkan-sheet-khusus-google-sheet" class="level3">
+<h3 class="anchored" data-anchor-id="menampilkan-sheet-khusus-google-sheet">4.1 Menampilkan sheet khusus google sheet</h3>
+<p>Misal dari google sheet : <a href="https://docs.google.com/spreadsheets/d/1aFu8lnD_g0yjF5O-K6SFgSEWiHPpgvFCF0NY9D6LXnY/edit#gid=0" class="uri">https://docs.google.com/spreadsheets/d/1aFu8lnD_g0yjF5O-K6SFgSEWiHPpgvFCF0NY9D6LXnY/edit#gid=0</a></p>
+<p>terdapat beberapa sheet dan kita akan menampilkan data di sheet Togersen Island maka :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Identifikasi id sheet google sheet</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>penguins_sheet_id <span class="ot">&lt;-</span> <span class="st">"1aFu8lnD_g0yjF5O-K6SFgSEWiHPpgvFCF0NY9D6LXnY"</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Tampilkan data sheet Torgersen Island</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="fu">read_sheet</span>(penguins_sheet_id, <span class="at">sheet =</span> <span class="st">"Torgersen Island"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 52 × 8
+   species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+   &lt;chr&gt;   &lt;chr&gt;     &lt;list&gt;         &lt;list&gt;        &lt;list&gt;            &lt;list&gt;     
+ 1 Adelie  Torgersen &lt;dbl [1]&gt;      &lt;dbl [1]&gt;     &lt;dbl [1]&gt;         &lt;dbl [1]&gt;  
+ 2 Adelie  Torgersen &lt;dbl [1]&gt;      &lt;dbl [1]&gt;     &lt;dbl [1]&gt;         &lt;dbl [1]&gt;  
+ 3 Adelie  Torgersen &lt;dbl [1]&gt;      &lt;dbl [1]&gt;     &lt;dbl [1]&gt;         &lt;dbl [1]&gt;  
+ 4 Adelie  Torgersen &lt;chr [1]&gt;      &lt;chr [1]&gt;     &lt;chr [1]&gt;         &lt;chr [1]&gt;  
+ 5 Adelie  Torgersen &lt;dbl [1]&gt;      &lt;dbl [1]&gt;     &lt;dbl [1]&gt;         &lt;dbl [1]&gt;  
+ 6 Adelie  Torgersen &lt;dbl [1]&gt;      &lt;dbl [1]&gt;     &lt;dbl [1]&gt;         &lt;dbl [1]&gt;  
+ 7 Adelie  Torgersen &lt;dbl [1]&gt;      &lt;dbl [1]&gt;     &lt;dbl [1]&gt;         &lt;dbl [1]&gt;  
+ 8 Adelie  Torgersen &lt;dbl [1]&gt;      &lt;dbl [1]&gt;     &lt;dbl [1]&gt;         &lt;dbl [1]&gt;  
+ 9 Adelie  Torgersen &lt;dbl [1]&gt;      &lt;dbl [1]&gt;     &lt;dbl [1]&gt;         &lt;dbl [1]&gt;  
+10 Adelie  Torgersen &lt;dbl [1]&gt;      &lt;dbl [1]&gt;     &lt;dbl [1]&gt;         &lt;dbl [1]&gt;  
+# ℹ 42 more rows
+# ℹ 2 more variables: sex &lt;chr&gt;, year &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="web-scrapping" class="level2">
+<h2 class="anchored" data-anchor-id="web-scrapping">5. Web Scrapping</h2>
+<p>Web scraping adalah metode pengambilan data dari sebuah website secara otomatis. Teknik ini sangat berguna dalam bisnis online, baik itu untuk riset pasar, riset kompetitor, atau mencari leads 1. Ada beberapa teknik web scraping yang umum dilakukan, yaitu:</p>
+<ul>
+<li><p>Menyalin data secara manual</p></li>
+<li><p>Menggunakan regular expression</p></li>
+<li><p>Parsing HTML</p></li>
+</ul>
+<p>Kali ini kita akan menggunakan fungsi read_html() untuk meng-ekstrak element tabel dari website dengan me-load package tidyverse dan rvest terlebih dahulu Misal kita akan meng-import data dari tabel website chart trending Youtube maka :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Load Package</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Url data tabel</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://kworb.net/youtube/trending.html"</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>html <span class="ot">&lt;-</span> <span class="fu">read_html</span>(url)</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Ekstrak element tabel</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>table <span class="ot">&lt;-</span> html <span class="sc">|&gt;</span> </span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_element</span>(<span class="st">"table"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_table</span>()</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Tampilkan Tabel</span></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 92 × 5
+      `` ``    Video                                              `#` Highlights
+   &lt;int&gt; &lt;chr&gt; &lt;chr&gt;                                            &lt;int&gt; &lt;chr&gt;     
+ 1     1 NEW   Taylor Swift - Style (Taylor's Version) (Lyric …    30 #5 Argent…
+ 2     2 NEW   Taylor Swift - Blank Space (Taylor's Version) (…    20 #7 Argent…
+ 3     3 NEW   Kenia OS - Ojo X Ojo (Video Oficial)                18 #1 Mexico…
+ 4     4 -2    Con To´ - Yeri Mua, Noriega, Oviña, Flow Nasty …    16 #6 Mexico…
+ 5     5 -4    Mal Hombre                                          16 #10 Mexic…
+ 6     6 NEW   Morat - Demasiado Lejos (Visualizer)                16 #16 Mexic…
+ 7     7 NEW   Wisin, Chencho Corleone - LOCO X PERREARTE (Off…    14 #11 Argen…
+ 8     8 NEW   Becky G - POR EL CONTRARIO (Lyric Video)            11 #12 Argen…
+ 9     9 -6    REGGAETON CHAMPAGNE - Bellakath ft Dani Flow (V…    13 #14 Mexic…
+10    10 NEW   RIIZE 라이즈 'Talk Saxy' MV                         12 #13 Thail…
+# ℹ 82 more rows</code></pre>
+</div>
+</div>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center"><span class="citation" data-cites="Data">@Data</span> Analitik (2023), UPN Veteran Yogyakarta</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+</body></html>

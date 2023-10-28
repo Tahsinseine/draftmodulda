@@ -1,0 +1,274 @@
+---
+title: "Topik 1 Data Import"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+Sebelum melakukan data import kita perlu mengunduh file datasets pada link berikut atau klik ikon Github dan unduh file data yang diperlukan
+
+## 1. Import Data Spreadsheet Excel
+
+### 1.1 Library Spreadsheet Excel
+
+Di bagian ini, kita akan mempelajari cara memuat data dari spreadsheet Excel di R dengan package `readxl`. Package ini adalah tidyverse non-core, jadi kita perlu memuatnya secara eksplisit, tetapi diinstal secara otomatis ketika menginstal paket tidyverse. Kemudian, kita juga akan menggunakan package `writexl`, yang memungkinkan kita untuk membuat spreadsheet Excel.
+
+```{r}
+library(readxl)
+library(tidyverse)
+library(writexl)
+```
+
+### 1.2 Membaca spreadsheet Excel
+
+Semua fungsi ini memiliki sintaks yang sama seperti fungsi untuk membaca jenis file lain, misalnya, `read_csv()` , `read_table()` dll. kali ini kita akan menggunakan `read_excel()` .
+kita akan mengimport data Excel students yang telah diunduh tadi dengan menggunakan fungsi :
+
+```{r}
+#> membaca file student.xlsx dari lokasi folder data
+students <- read_excel("data/students.xlsx")
+
+students
+```
+
+Nama kolom tidak teratur,lalu kita ubah dengan fungsi `col_names`
+
+```{r}
+#> mengubah nama kolom
+read_excel(
+  "data/students.xlsx",
+  col_names = c("student_id", "full_name", "favourite_food", "meal_plan", "age"),
+  skip = 1
+)
+
+```
+
+#### 1.2.1 Tipe Data 
+
+Dalam file Excel, semua nilai memiliki tipe yang berbeda tidak semuanya adalah string. Data yang mendasari dalam spreadsheet Excel lebih kompleks, seperti :
+
+-   Boolean, seperti TRUE , , FALSE atau NA.
+
+-   Number, seperti "10" atau "10,5".
+
+-   Date, yang juga dapat mencakup waktu seperti "11/1/21" atau "11/1/21 3:00 PM".
+
+-   String teks, seperti "sepuluh".
+
+terlihat pada kolom age dengan tipe data yang seharusnya numeric terdapat data string/huruf **(five)** sehingga kita ubah menjadi numeric **(5)**
+
+```{r}
+students <- read_excel(
+  "data/students.xlsx",
+  col_names = c("student_id", "full_name", "favourite_food", "meal_plan", "age"),
+  skip = 1,
+  na = c("", "N/A"),
+  col_types = c("numeric", "text", "text", "text", "text")
+)
+#> Fungsi col_types mengubah type data
+
+students <- students |>
+  mutate(
+    age = if_else(age == "five", "5", age),
+    age = parse_number(age)
+  )
+#> Fungsi mutate mengubah data dengan argumen if 
+
+students
+
+```
+
+### 1.3 Membaca worksheet Excel
+
+Kita bisa memilih akan menampilkan sheet yang diperlukan dari worksheet Excel
+
+Pada data Excel penguins terdapat worksheet dan kita akan menampilkan sheet `Torgerseen Island`
+
+```{r echo = FALSE, out.width = "50%", fig.align = "center"}
+
+knitr::include_graphics("https://r4ds.hadley.nz/screenshots/import-spreadsheets-penguins-islands.png")
+
+```
+
+```{r}
+#> Identifikasi nama sheet
+penguins_torgersen <- read_excel("data/penguins.xlsx", sheet = "Torgersen Island", na = "NA")
+
+#> Tampilkan data sheet
+penguins_torgersen
+
+```
+
+### 1.4 Write ke Excel
+
+Kita dapat menginput data dan mengubahnya ke Excel menggunakan fungsi `write_xlsx()`
+
+```{r}
+#> Buat data dan input 
+bake_sale <- tibble(
+  item     = factor(c("brownie", "cupcake", "cookie")),
+  quantity = c(10, 5, 8)
+)
+
+#> Tampilkan tabel
+bake_sale
+```
+
+```{r}
+#> Selanjutnya kita create ke file Excel dan simpan di path lokasi folder
+write_xlsx(bake_sale, path = "data/bake-sale.xlsx")
+```
+
+```{r}
+#> Tampilkan data Excel yang telah dibuat
+read_excel("data/bake-sale.xlsx")
+
+```
+
+## 2. Import Database
+
+Dalam bab ini, kita akan mempelajari package `DBI` untuk menyambungkan ke database dan kemudian mengambil data dengan query SQL. SQL (Structured Query Language), adalah bahasa pemrograman untuk database dan merupakan bahasa terpenting bagi semua jenis data analitik.
+
+Pada contoh ini kita akan meng-import database SQL berisi data postingan dan pesan user Tweats. Pertama kita perlu me-load package `DBI` dan `RMySQL`, kemudian menghubungkan koneksi database tweater.
+
+```{r}
+library(DBI)
+library(RMySQL)
+
+#> Koneksi database
+con <- dbConnect(RMySQL::MySQL(), 
+                 dbname = "tweater", 
+                 host = "courses.csrrinzqubik.us-east-1.rds.amazonaws.com", 
+                 port = 3306,
+                 user = "student",
+                 password = "datacamp")
+
+dbListTables(con)
+```
+
+### 2.1 Tampilkan Semua Tabel
+
+Terlihat ada 3 tabel yaitu **"comments", "tweats",** dan **"users"**
+
+```{r}
+tables <- dbListTables(con)
+table_names <- dbListTables(con)
+
+#> Import semua tabel
+tables <- lapply(table_names, dbReadTable, conn = con)
+
+#> Tampilkan semua Tabel
+tables
+```
+
+### 2.2 Tampilkan tabel khusus
+
+Misal kita hanya akan menampilkan tabel users
+
+```{r}
+#> import tabel users dari data tweater
+users <- dbReadTable(con, "users")
+
+#> Tampilkan tabel
+users
+```
+
+### 2.3 Read data dengan SELECT dan WHERE
+
+Kita akan menampilkan data post terbaru dari tabel tweats pada tanggal lebih dari '2015-09-21'
+
+```{r}
+#> menampilkan data post dari tabel tweats pada tanggal lebih dari '2015-09-21'
+latest <- dbGetQuery(con, "SELECT post FROM tweats
+WHERE date > '2015-09-21'")
+
+#> Tampilkan data
+latest
+```
+
+### 2.4 Fungsi INNER JOIN
+
+Misal kita akan menampilkan gabungan data dari 2 tabel berbeda berdasarkan foreign key/id
+
+```{r}
+#> Tampilkan nama dari tabel users dan post dari tabel tweats berdasarkan user id dimana tanggal post lebih dari '2015-09-19'
+dbGetQuery(con, "SELECT name, post
+  FROM users INNER JOIN tweats on users.id = user_id
+    WHERE date > '2015-09-19'")
+
+```
+
+## 3. Import Data Online
+
+Metode ketiga yaitu import data dari url dengan fungsi read. Pertama kita perlu me-load package tidyverse kemudian gunakan fungsi `read_csv()` atau `read_excel()` sesuai format data
+
+```{r}
+#> Load package
+library(tidyverse)
+
+#> Identifikasi url data
+students <- read_csv("https://pos.it/r4ds-students-csv")
+
+#> Tampilkan data
+students
+```
+
+## 4. Import Google Sheets
+
+Panggunaan package googlesheet hampir mirip dengan import online hanya saja diganti dengan *sheet_id*. Pertama kita me-load package `googlesheets4` dan `tidyverse` kemudian gunakan fungsi read_sheet. Misal kita akan mengimport data dari google sheet : <https://docs.google.com/spreadsheets/d/1V1nPp1tzOuutXFLb3G9Eyxi3qxeEhnOXUzL5_BcCQ0w> maka kita akan mengambil id sheet sebagai **key call** nya yaitu `1V1nPp1tzOuutXFLb3G9Eyxi3qxeEhnOXUzL5_BcCQ0w`
+
+```{r}
+library(googlesheets4)
+googlesheets4::gs4_deauth()
+
+read_sheet("1V1nPp1tzOuutXFLb3G9Eyxi3qxeEhnOXUzL5_BcCQ0w")
+
+```
+
+### 4.1 Menampilkan sheet khusus google sheet
+
+Misal dari google sheet : <https://docs.google.com/spreadsheets/d/1aFu8lnD_g0yjF5O-K6SFgSEWiHPpgvFCF0NY9D6LXnY/edit#gid=0>
+
+terdapat beberapa sheet dan kita akan menampilkan data di sheet Togersen Island maka :
+
+```{r}
+
+#> Identifikasi id sheet google sheet
+penguins_sheet_id <- "1aFu8lnD_g0yjF5O-K6SFgSEWiHPpgvFCF0NY9D6LXnY"
+
+#> Tampilkan data sheet Torgersen Island
+read_sheet(penguins_sheet_id, sheet = "Torgersen Island")
+
+```
+
+## 5. Web Scrapping
+
+Web scraping adalah metode pengambilan data dari sebuah website secara otomatis. Teknik ini sangat berguna dalam bisnis online, baik itu untuk riset pasar, riset kompetitor, atau mencari leads 1. Ada beberapa teknik web scraping yang umum dilakukan, yaitu:
+
+-   Menyalin data secara manual
+
+-   Menggunakan regular expression
+
+-   Parsing HTML
+
+Kali ini kita akan menggunakan fungsi read_html() untuk meng-ekstrak element tabel dari website dengan me-load package tidyverse dan rvest terlebih dahulu Misal kita akan meng-import data dari tabel website chart trending Youtube maka :
+
+```{r}
+#> Load Package
+library(tidyverse)
+library(rvest)
+
+#> Url data tabel
+url <- "https://kworb.net/youtube/trending.html"
+html <- read_html(url)
+
+#> Ekstrak element tabel
+table <- html |> 
+  html_element("table") |> 
+  html_table()
+
+#> Tampilkan Tabel
+table
+
+```

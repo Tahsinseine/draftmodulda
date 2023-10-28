@@ -1,0 +1,40 @@
+project:
+  type: website
+  output-dir: docs
+  
+website:
+  page-footer: "@Data Analitik (2023), UPN Veteran Yogyakarta" 
+  back-to-top-navigation: true
+  title: "Materi (R) Data Analitik"
+  navbar:
+    right: 
+      - icon: github
+        href: https://github.com/
+    background: success
+    search: true
+  
+    
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - section: "Topik Pembahasan"
+        contents:
+          - index.qmd
+          - topik2.qmd
+          - topik3.qmd
+          - topik4.qmd
+          - topik5.qmd
+      
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+editor: visual
+
+
+
+
